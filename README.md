@@ -25,8 +25,8 @@
 6. select airport.name as "name" from airport,game where game.screen_name="ilkka" and game.location=airport.ident;
 7. select country.name as "name" from airport,game,country where game.screen_name="ilkka" and game.location=airport.ident and airport.iso_country=country.iso_country;
 8. select goal.name from goal,goal_reached,game where game.screen_name="Heini" and game.id=goal_reached.game_id and goal_reached.goal_id=goal.id;
-9. select airport.name from airport,goal,game,goal_reached where game.screen_name="ilkka" and game.id=goal_reached.game_id and goal_reached.goal_id=goal.id and goal.name="CLOUDS" and goal.icon=airport.gps_code;
-10. select country.name from airport,goal,game,goal_reached,country where game.screen_name="ilkka" and game.id=goal_reached.game_id and goal_reached.goal_id=goal.id and goal.name="CLOUDS" and goal.icon=airport.gps_code and airport.iso_country=country.iso_country;
+9. select airport.name from airport inner join goal_reached inner join game on game.id = goal_reached.game_id inner join goal on goal.id = goal_reached.goal_id where game.screen_name = "Ilkka" and goal.name = "CLOUDS" and airport.ident = game.location;
+10. select country.name from airport inner join goal_reached inner join country inner join game on game.id = goal_reached.game_id inner join goal on goal.id = goal_reached.goal_id where game.screen_name = "Ilkka" and goal.name = "CLOUDS" and airport.ident = game.location and country.iso_country = airport.iso_country;
 
 ## Week 4
 
@@ -54,7 +54,7 @@
 2.  select continent, count(*) from country group by continent;
 3.  select screen_name from game where co2_consumed in (select min(co2_consumed) from game);
 4.  select screen_name from game where co2_consumed in (select min(co2_consumed) from game);
-5.  SELECT DISTINCT country.name AS "name",count(*) FROM country,airport WHERE airport.iso_country=country.iso_country GROUP BY country.name ORDER BY count(*) DESC LIMIT 50;
+5.  select country.name,count(*) from airport inner join country on airport.iso_country = country.iso_country group by country.iso_country order by count(*) desc;
 6.  SELECT DISTINCT country.name AS "name" FROM country,airport WHERE airport.iso_country=country.iso_country GROUP BY country.name HAVING COUNT(*) > 1000;
 7.  SELECT NAME FROM airport WHERE airport.elevation_ft IN (SELECT MAX(airport.elevation_ft) FROM airport);
 8.  SELECT country.name FROM airport,country WHERE airport.elevation_ft IN (SELECT MAX(airport.elevation_ft) FROM airport) AND country.iso_country=airport.iso_country;
